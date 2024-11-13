@@ -6,12 +6,6 @@ pipeline {
     }
 
     stages {
-        stage('Show Parameters') {
-            steps {
-                // Exibe o valor do parâmetro BRANCH no console para validação
-                sh 'echo "Branch ou tag selecionado: ${BRANCH}"'
-            }
-        }
         stage('Clone Repository') {
             steps {
                 checkout([
@@ -19,6 +13,12 @@ pipeline {
                     branches: [[name: "refs/heads/${BRANCH}"]], 
                     userRemoteConfigs: [[url: 'https://github.com/brambillagabrielle/repositorio-teste.git']]
                 ])
+            }
+        }
+
+        stage('Copying to S3') {
+            steps {
+                sh "aws s3 sync . s3://devstore-teste-pipeline-jenkins/"
             }
         }
     }
