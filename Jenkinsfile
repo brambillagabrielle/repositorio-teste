@@ -14,7 +14,7 @@ pipeline {
             steps {
                 checkout([
                     $class: 'GitSCM', 
-                    branches: [[name: "refs/heads/${BRANCH}"]], 
+                    branches: [[name: "refs/heads/${BRANCH}"]],
                     userRemoteConfigs: [[url: "${REPOSITORY}"]]
                 ])
             }
