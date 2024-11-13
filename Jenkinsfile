@@ -16,7 +16,7 @@ pipeline {
             steps {
                 checkout([
                     $class: 'GitSCM', 
-                    branches: [[name: "refs/tags/${BRANCH}"]], 
+                    branches: [[name: "refs/heads/${BRANCH}"]], 
                     userRemoteConfigs: [[url: 'https://github.com/brambillagabrielle/repositorio-teste.git']]
                 ])
             }
