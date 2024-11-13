@@ -2,7 +2,11 @@ pipeline {
     agent any
 
     environment {
+        REPOSITORY = "${params.REPOSITORY}"
         BRANCH = "${params.BRANCH}"
+        BUCKET = "${params.BUCKET}"
+        ROLE_ARN = credentials('ROLE_ARN')
+        ACCOUNT = credentials('ACCOUNT')
     }
 
     stages {
@@ -11,14 +15,16 @@ pipeline {
                 checkout([
                     $class: 'GitSCM', 
                     branches: [[name: "refs/heads/${BRANCH}"]], 
-                    userRemoteConfigs: [[url: 'https://github.com/brambillagabrielle/repositorio-teste.git']]
+                    userRemoteConfigs: [[url: "${REPOSITORY}"]]
                 ])
             }
         }
 
         stage('Copying to S3') {
             steps {
-                sh "aws s3 sync . s3://devstore-teste-pipeline-jenkins/"
+                withAWS(role: "${ROLE_ARN}", roleAccount: "${ACCOUNT}") {
+                  sh "aws s3 sync . s3://${BUCKET}"
+                }
             }
         }
     }
