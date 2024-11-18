@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        TAG = "${params.TAG}"
         BUCKET = "${params.BUCKET}"
     }
 
@@ -10,11 +9,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 script {
-                    checkout([
-                        $class: 'GitSCM', 
-                        branches: [[name: "refs/tags/${TAG}"]],
-                        userRemoteConfigs: [[url: scm.userRemoteConfigs[0].url]]
-                    ])
+                    checkout scm
                 }
             }
         }
