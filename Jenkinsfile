@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        TAG = params.TAG
-        REPOSITORY_URL = params.REPOSITORY_URL
-        BUCKET_NAME = params.BUCKET_NAME
+        TAG = "${params.TAG}"
+        REPOSITORY_URL = "${params.REPOSITORY_URL}"
+        BUCKET_NAME = "${params.BUCKET_NAME}"
     }
 
     stages {
@@ -13,7 +13,7 @@ pipeline {
                 checkout([
                     $class: 'GitSCM', 
                     branches: [[name: "refs/tags/${TAG}"]],
-                    userRemoteConfigs: [[url: REPOSITORY_URL]]
+                    userRemoteConfigs: [[url: "${REPOSITORY_URL}"]]
                 ])
             }
         }
