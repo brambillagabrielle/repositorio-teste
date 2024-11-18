@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        BUCKET = "${params.BUCKET}"
+        BUCKET_NAME = "${params.BUCKET_NAME}"
     }
 
     stages {
@@ -16,7 +16,7 @@ pipeline {
 
         stage('Copying to S3') {
             steps {
-                sh "aws s3 sync . s3://${BUCKET}"
+                sh "aws s3 sync . s3://${BUCKET_NAME}"
             }
         }
     }
