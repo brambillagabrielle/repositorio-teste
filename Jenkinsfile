@@ -2,21 +2,29 @@ pipeline {
     agent any
 
     environment {
-        BUCKET_NAME = "${params.BUCKET_NAME}"
+        TAG = params.TAG
+        REPOSITORY_URL = params.REPOSITORY_URL
+        BUCKET_NAME = params.BUCKET_NAME
     }
 
     stages {
-        stage('Clone Repository') {
+        stage('Checkout Code') {
             steps {
-                script {
-                    checkout scm
-                }
+                checkout([
+                    $class: 'GitSCM', 
+                    branches: [[name: "refs/tags/${TAG}"]],
+                    userRemoteConfigs: [[url: REPOSITORY_URL]]
+                ])
             }
         }
 
-        stage('Copying to S3') {
+        stage('Copy to S3') {
             steps {
-                sh "aws s3 sync . s3://${BUCKET_NAME}"
+                sh '''
+                    aws s3 sync . s3://${BUCKET_NAME} \
+                    --exclude ".git/*" \
+                    --exclude "Jenkinsfile"
+                '''
             }
         }
     }
