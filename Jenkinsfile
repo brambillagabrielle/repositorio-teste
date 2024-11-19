@@ -8,7 +8,7 @@ pipeline {
     }
 
     stages {
-        stage('Checkout Code') {
+        stage('Checkout SCM') {
             steps {
                 checkout([
                     $class: 'GitSCM', 
@@ -18,7 +18,7 @@ pipeline {
             }
         }
 
-        stage('Copy to S3') {
+        stage('Deploy to S3') {
             steps {
                 sh '''
                     aws s3 sync . s3://${BUCKET_NAME} \
